@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A quiet home for your everyday internet. A simple, personal collection of useful websites.">
+    <meta name="color-scheme" content="light dark">
+    <title>Personal Navigation</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+    <!-- 小型普通脚本：支持直接打开文件，也在首次绘制前恢复主题。 -->
+    <script src="./links.js"></script>
+    <script src="./editor.js"></script>
+    <script src="./app.js"></script>
+    <link rel="stylesheet" href="./style.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to websites</a>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="./" aria-label="Navigation home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><path d="m16.5 7.5-3 6-6 3 3-6 6-3Z"/><circle cx="12" cy="12" r="9"/></svg>
+          </span>
+          <span id="site-title">Personal Navigation</span>
+        </a>
+        <nav class="header-actions" aria-label="Site tools">
+          <a id="github-link" class="header-link" href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub <span data-icon="external" aria-hidden="true"></span></a>
+          <button id="edit-link" class="header-link edit-link" type="button" aria-haspopup="dialog"><span data-icon="edit" aria-hidden="true"></span><span>编辑导航</span></button>
+          <span class="action-divider" aria-hidden="true"></span>
+          <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Theme: System. Switch to Light."><span id="theme-icon" aria-hidden="true"></span><span id="theme-label">System</span></button>
+        </nav>
+      </header>
+
+      <main id="main">
+        <section class="welcome" aria-labelledby="welcome-heading">
+          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span><span id="site-eyebrow">A PERSONAL COLLECTION</span></p>
+          <h1 id="welcome-heading">Where do you want to go?</h1>
+          <p id="site-description" class="welcome-description">A quiet home for your everyday internet.</p>
+          <form class="search" role="search" aria-label="Search websites">
+            <span class="search-icon" data-icon="search" aria-hidden="true"></span>
+            <label class="sr-only" for="search-input">Search websites, keywords, or categories</label>
+            <input id="search-input" type="search" placeholder="Search websites, keywords, or categories…" autocomplete="off" spellcheck="false" aria-controls="collections" aria-keyshortcuts="/ Escape">
+            <kbd id="search-shortcut" aria-hidden="true">/</kbd>
+            <button id="clear-search" class="clear-search" type="button" aria-label="Clear search" hidden><span data-icon="close" aria-hidden="true"></span></button>
+          </form>
+        </section>
+
+        <div class="collection-toolbar">
+          <nav id="category-filters" class="category-filters" aria-label="Filter by category"></nav>
+          <p id="result-count" class="result-count" role="status" aria-live="polite" aria-atomic="true"></p>
+        </div>
+        <div id="collections" class="collections"></div>
+        <section id="empty-state" class="empty-state" aria-labelledby="empty-title" hidden>
+          <span class="empty-icon" data-icon="search" aria-hidden="true"></span>
+          <h2 id="empty-title">No matching websites.</h2>
+          <p>Try another keyword or explore all your links.</p>
+          <button id="reset-filters" class="reset-filters" type="button">Show all websites <span aria-hidden="true">↗</span></button>
+        </section>
+        <noscript><p class="noscript-message">Please enable JavaScript to view this collection of websites.</p></noscript>
+      </main>
+
+      <footer class="site-footer">
+        <p>A few good links. A little less searching.</p>
+        <p class="keyboard-hint"><kbd>/</kbd> to search <span aria-hidden="true">·</span> <kbd>esc</kbd> to reset</p>
+      </footer>
+    </div>
+
+    <dialog id="editor-dialog" class="editor-dialog" aria-labelledby="editor-title" lang="zh-CN">
+      <div class="editor-panel">
+        <header class="editor-header">
+          <div><p class="eyebrow">MAKE IT YOURS</p><h2 id="editor-title">编辑导航</h2></div>
+          <button class="icon-button" type="button" data-close="editor-dialog" aria-label="关闭编辑器"><span data-icon="close" aria-hidden="true"></span></button>
+        </header>
+        <p class="editor-intro">在这里整理你的常用网站。保存后立即生效，并保留在当前浏览器。</p>
+        <div class="editor-toolbar">
+          <div class="editor-actions">
+            <button id="add-website" class="editor-button primary" type="button">＋ 添加网站</button>
+            <button id="add-category" class="editor-button" type="button">＋ 添加分类</button>
+          </div>
+          <label class="editor-filter">查看分类 <select id="editor-category-filter"><option value="all">全部分类</option></select></label>
+        </div>
+        <div class="editor-feedback">
+          <p id="editor-status" role="status" aria-live="polite">当前使用站点配置。</p>
+          <button id="undo-edit" class="text-button" type="button" disabled>撤销上一步</button>
+        </div>
+        <p id="editor-warning" class="editor-warning" role="alert" hidden></p>
+        <button id="reload-local" class="editor-button" type="button" hidden>载入另一标签页的最新修改</button>
+        <div id="editor-list" class="editor-list"></div>
+        <footer class="editor-footer">
+          <div class="editor-actions">
+            <button id="copy-links" class="editor-button" type="button" title="复制完整的 links.js 发布配置">复制 links.js</button>
+            <button id="export-links" class="editor-button" type="button">导出 links.js <span aria-hidden="true">↗</span></button>
+            <button id="export-backup" class="editor-button" type="button">导出备份</button>
+            <button id="import-backup" class="editor-button" type="button">导入备份</button>
+            <input id="import-file" type="file" accept=".json,application/json" hidden>
+            <button id="restore-source" class="text-button" type="button">恢复站点版本</button>
+          </div>
+          <p>修改仅保存在此浏览器。要更新公开站点，可复制 links.js，将完整内容粘贴替换到 GitHub 编辑页并提交，也可以导出文件。<a id="repository-edit" target="_blank" rel="noopener noreferrer" hidden>打开 GitHub 编辑页 ↗</a></p>
+        </footer>
+      </div>
+    </dialog>
+
+    <dialog id="entry-dialog" class="entry-dialog" aria-labelledby="entry-title" lang="zh-CN">
+      <form id="entry-form" class="editor-panel">
+        <header class="editor-header">
+          <h2 id="entry-title">添加网站</h2>
+          <button class="icon-button" type="button" data-close="entry-dialog" aria-label="取消编辑"><span data-icon="close" aria-hidden="true"></span></button>
+        </header>
+        <label class="editor-field" for="entry-name"><span id="entry-name-label">网站名称</span><input id="entry-name" name="name" required autocomplete="off" autofocus></label>
+        <fieldset id="website-fields" class="editor-fields">
+          <label class="editor-field" for="entry-url">网址<input id="entry-url" name="url" type="url" placeholder="https://example.com" autocomplete="url" required><small>填写完整的 http:// 或 https:// 地址。</small></label>
+          <label class="editor-field" for="entry-category">所属分类<select id="entry-category" name="category" required></select></label>
+          <label class="editor-field" for="entry-description">简介 <span class="optional">选填</span><input id="entry-description" name="description" autocomplete="off"></label>
+          <label class="editor-field" for="entry-keywords">搜索关键词 <span class="optional">选填</span><input id="entry-keywords" name="keywords" placeholder="用逗号分隔，例如：AI, 写作, research" autocomplete="off"></label>
+        </fieldset>
+        <fieldset id="category-fields" class="editor-fields" hidden disabled>
+          <label class="editor-field" for="entry-icon">分类图标<select id="entry-icon" name="icon"><option value="globe">◎ 通用</option><option value="star">☆ 常用</option><option value="microscope">⌕ 科研</option><option value="sparkles">✧ AI / 灵感</option><option value="code">〈〉开发</option><option value="cloud">☁ 云服务</option></select></label>
+        </fieldset>
+        <p id="entry-error" class="editor-warning" role="alert" hidden></p>
+        <footer class="entry-footer"><button class="editor-button" type="button" data-close="entry-dialog">取消</button><button class="editor-button primary" type="submit">保存</button></footer>
+      </form>
+    </dialog>
+
+    <dialog id="copy-dialog" class="copy-dialog" aria-labelledby="copy-title" aria-describedby="copy-help" lang="zh-CN">
+      <div class="editor-panel">
+        <header class="editor-header">
+          <h2 id="copy-title">复制发布配置</h2>
+          <button class="icon-button" type="button" data-close="copy-dialog" aria-label="关闭复制窗口"><span data-icon="close" aria-hidden="true"></span></button>
+        </header>
+        <p id="copy-help" class="editor-intro">浏览器未允许自动复制。下方已选中全部内容，请按 Ctrl+C（Mac：⌘C），或在手机上长按复制。</p>
+        <label class="sr-only" for="copy-content">完整的 links.js 内容</label>
+        <textarea id="copy-content" class="copy-content" readonly spellcheck="false" wrap="off"></textarea>
+        <footer class="entry-footer"><button id="select-copy-content" class="editor-button" type="button">全选内容</button><button class="editor-button primary" type="button" data-close="copy-dialog">关闭</button></footer>
+      </div>
+    </dialog>
+
+    <dialog id="confirm-dialog" class="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-message" lang="zh-CN">
+      <div class="editor-panel">
+        <h2 id="confirm-title">确认操作</h2>
+        <p id="confirm-message"></p>
+        <footer class="entry-footer"><button class="editor-button" type="button" data-close="confirm-dialog" autofocus>取消</button><button id="confirm-action" class="editor-button primary" type="button">确认</button></footer>
+      </div>
+    </dialog>
+  </body>
+</html>
